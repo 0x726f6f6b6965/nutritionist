@@ -9,3 +9,9 @@ wheels/
 # Virtual environments
 .venv
 .env
+
+# infra
+deployment/infra/.terraform.lock.hcl
+deployment/infra/terraform.*
+deployment/infra/.terraform/
+deployment/infra/.terraform.tfstate.lock.info

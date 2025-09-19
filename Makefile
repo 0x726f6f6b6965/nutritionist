@@ -13,7 +13,7 @@ build:
 
 .PHONY: run
 run: build
-	@docker run --env-file ./.env -p 8080:80 fastapi-app
+	@docker run --env-file ./.env -p 8080:80 ${IMG_NAME}
 
 .PHONY: create-menu
 create-menu:
@@ -37,4 +37,30 @@ service-up: build
 .PHONY: service-down
 service-down:
 	@docker-compose -f ./deployment/compose.yaml --project-directory . down 
+
+.PHONY: image-push
+image-push:build-img
+	docker push ${DOCKER_HOSTNAME}/${PROJECT_ID}/${PROJECTNAME}/${IMG_NAME}:latest
+
+.PHONY: build-img
+build-img:
+	@export TARGETPLATFORM=linux/amd64 && \
+	docker build -t ${DOCKER_HOSTNAME}/${PROJECT_ID}/${PROJECTNAME}/${IMG_NAME} -f ./deployment/Dockerfile .
+
+
+.PHONY: deploy
+deploy:
+	@terraform -chdir=./deployment/infra apply -var-file="terraform.tfvars" -var service_name=${PROJECTNAME} -auto-approve
+
+.PHONY: plan
+plan:
+	@terraform -chdir=./deployment/infra plan -var-file="terraform.tfvars" -var service_name=${PROJECTNAME}
+
+.PHONY: destroy
+destroy:
+	@terraform -chdir=./deployment/infra destroy -auto-approve
+
+.PHONY: tf-fmt
+tf-fmt:
+	@terraform -chdir=./deployment/infra fmt
 
