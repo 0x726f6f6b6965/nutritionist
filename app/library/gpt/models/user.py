@@ -1,10 +1,10 @@
 from app.library.storage.models import User, History
 from app.library.storage.enums import Meal, Gender
-from decimal import Decimal
 import json
 
 class UserProfile:
     def __init__(self, info: User):
+        self.user_id = info.line_id
         self.height = info.height
         self.weight = info.weight
         self.age = info.age
@@ -27,6 +27,7 @@ class UserProfile:
         g = Gender(self.gender)
         data = {
             "user_profile": {
+                "user_id": self.user_id,
                 "height_cm": float(self.height),
                 "weight_kg": float(self.weight),
                 "age": self.age,
