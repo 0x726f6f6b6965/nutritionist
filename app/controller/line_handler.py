@@ -113,6 +113,11 @@ def handle_imgae(event):
         if len(histories) > 0:
             user_profile.add_history(histories)
         resp = nutrition_api.get_meal_info(Food(description, meal, photo), user_profile)
+        if resp is None:
+            line_bot_api.reply_message_with_http_info(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token, messages=[TextMessage(text="ai response error")]))
+            return
         if resp["is_food"] == False:
             line_bot_api.reply_message_with_http_info( 
               ReplyMessageRequest( 
