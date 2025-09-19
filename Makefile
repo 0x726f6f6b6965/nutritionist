@@ -58,6 +58,11 @@ plan:
 
 .PHONY: destroy
 destroy:
+	@terraform -chdir=./deployment/infra destroy -target=google_cloud_run_v2_service.default -auto-approve
+	@terraform -chdir=./deployment/infra destroy -target=google_vpc_access_connector.connector -auto-approve
+	@terraform -chdir=./deployment/infra destroy -target=google_sql_database_instance.postgres_instance -auto-approve
+	@terraform -chdir=./deployment/infra destroy -target=google_service_networking_connection.private_vpc_connection -auto-approve
+	@terraform -chdir=./deployment/infra destroy -target=google_compute_network.vpc_network -auto-approve
 	@terraform -chdir=./deployment/infra destroy -auto-approve
 
 .PHONY: tf-fmt
